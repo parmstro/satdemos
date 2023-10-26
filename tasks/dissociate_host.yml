@@ -1,0 +1,38 @@
+---
+# dissociate the host from the VM
+
+- name: "Get the id of the host"
+  redhat.satellite.host_info:
+    username: "{{ satellite_admin_username }}"
+    password: "{{ satellite_admin_password }}"
+    server_url: "{{ satellite_server_url }}"
+    organization: "{{ host.organization }}"
+    name: "{{ host.fqdn }}"
+  register: hostinfo
+
+- name: "Check the result"
+  ansible.builtin.debug:
+    var: hostinfo
+
+- name: "If the host exists in satellite, dissociate it"
+  when: hostinfo.host.id is defined
+  block:
+
+    - name: "Set the host_id"
+      ansible.builtin.set_fact:
+        host_id: "{{ hostinfo.host.id }}"
+
+    - name: "Call the API to dissociate"
+      ansible.builtin.uri:
+        url: "{{ satellite_server_url }}/api/hosts/{{ host_id }}/disassociate"
+        method: PUT
+        user: "{{ satellite_admin_username }}"
+        password: "{{ satellite_admin_password }}"
+        force_basic_auth: true
+        validate_certs: "{{ satellite_validate_certs }}"
+        headers:
+          Content-Type: application/json
+          Accept: :application/json,version=2
+        status_code: "200"
+      register: uri_result
+      changed_when: uri_result.status == "200"

@@ -1,0 +1,12 @@
+---
+# Delete the host
+
+- name: "Delete the host"
+  redhat.satellite.host:
+    username: "{{ satellite_admin_username }}"
+    password: "{{ satellite_admin_password }}"
+    server_url: "{{ satellite_server_url }}"
+    organization: "{{ host.organization }}"
+    name: "{{ host.fqdn }}"
+    state: absent
+    validate_certs: "{{ satellite_validate_certs }}"

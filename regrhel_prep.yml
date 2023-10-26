@@ -1,0 +1,31 @@
+# This play uses some standard code to build out a bunch of systems on Satellite
+# then it deregisters them from Satellite
+# dissociates the VM from Satellite
+# deletes the host reference in Satellite
+# The systems are now ready for a demonstration of using "register system"
+# OR registering multiple systems using ansible automation.
+
+- name: "Build systems for satellite registration demo"
+  hosts: localhost
+  connection: local
+  become: true
+
+  vars_files:
+    - vars/hostlist.yml
+
+  tasks:
+
+    # This uses redhat.satellite/foreman-ansible-modules
+    # and a hostlist (see vars) to create new systems using satellite
+    - name: "Build the systems"
+      ansible.builtin.include_tasks: tasks/create_host_from_hostgroup.yml
+      loop: hostlist
+      loop_control:
+        loop_var: host
+
+  # Note: There needs to be some rework after deployment
+  # removing the systems that are created by Satellite
+  # removes their DNS records, so...
+  # get the host records from IdM before they are deleted
+  # remove the systems
+  # recreate the records afterwards...

@@ -1,0 +1,12 @@
+[provisioner]
+localhost
+
+[stdalone]
+reg1rhel8.parmstrong.ca
+
+[reghosts]
+reg2rhel8.parmstrong.ca
+reg3rhel8.parmstrong.ca
+reg4rhel8.parmstrong.ca
+
+
