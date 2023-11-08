@@ -1,0 +1,70 @@
+---
+# Deploy a vm by booting it from an iso
+
+- name: "Create VM with a CDROM - power off"
+  community.vmware.vmware_guest:
+    hostname: "{{ vcenter_hostname_fqdn }}"
+    username: "{{ vcenter_service_username }}"
+    password: "{{ vcenter_service_password }}"
+    datacenter: "{{ vcenter_datacenter }}"
+    cluster: "{{ vcenter_cluster }}"
+    folder: "{{ vcenter_folder }}"
+    name: "{{ host.fqdn }}"
+    guest_id: "{{ host.guest_id }}"
+    annotation: "{{ host.comment }}"
+    cdrom:
+      - controller_number: 0
+        unit_number: 0
+        controller_type: sata
+        state: present
+        type: iso
+        iso_path: "{{ vcenter_fdi_iso_dc_path }}"
+    convert: thin
+    datastore: "{{ vcenter_datastore }}"
+    hardware:
+      boot_firmware: bios
+      memory_mb: "{{ host.memory_mb }}"
+      num_cpu_cores_per_socket: "{{ host.cpu_cores_per_socket | default(1) }}"
+      num_cpus: "{{ host.cpus }}"
+      scsi: paravirtual
+      hotadd_cpu: "{{ host.hotadd_cpu }}"
+      hotadd_memory: "{{ host.hotadd_memory }}"
+    networks:
+      - name: "{{ vcenter_network }}"
+        connected: true
+        start_connected: true
+        device_type: "{{ host.network_device_type }}"
+        type: "{{ host.network_config_type }}"
+    state: "powered-off"
+    validate_certs: "{{ vcenter_validate_certs }}"
+  register: createvm
+
+- name: "Create VM disks"
+  community.vmware.vmware_guest_disk:
+    hostname: "{{ vcenter_hostname_fqdn }}"
+    username: "{{ vcenter_service_username }}"
+    password: "{{ vcenter_service_password }}"
+    datacenter: "{{ vcenter_datacenter }}"
+    name: "{{ host.fqdn }}"
+    disk:
+      - size_mb: "{{ disk.size_mb }}"
+        scsi_controller: "{{ disk.scsi_controller }}"
+        unit_number: "{{ disk.unit_number }}"
+        type: "{{ disk.type }}"
+        scsi_type: "{{ disk.scsi_type }}"
+        disk_mode: "{{ disk.mode }}"
+        state: "present"
+    validate_certs: "{{ vcenter_validate_certs }}"
+  loop: "{{ host.disks }}"
+  loop_control:
+    loop_var: disk
+
+- name: "Power on VM"
+  community.vmware.vmware_guest:
+    hostname: "{{ vcenter_hostname_fqdn }}"
+    username: "{{ vcenter_service_username }}"
+    password: "{{ vcenter_service_password }}"
+    name: "{{ host.fqdn }}"
+    state: poweredon
+    validate_certs: "{{ vcenter_validate_certs }}"
+  register: poweron

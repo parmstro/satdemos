@@ -1,0 +1,21 @@
+---
+## Create VM for Pxeless provisioning...
+# Boots a system from the foreman discovery image iso attached to the cdrom
+# See pxeless_prep.yml for the remastering of the fdi iso
+# and loading it to vmware
+#
+
+- name: "Deploy Demo VM from FDI iso"
+  hosts: localhost
+  connection: local
+
+  vars_files:
+    - vars/vcenter_vars.yml
+    - ~/rhisbuilder_vault.yml
+
+  tasks:
+    - name: "Deploy VM from ISO"
+      ansible.builtin.include_tasks: "tasks/deployvm_from_iso.yml"
+      loop: "{{ fdi_list }}"
+      loop_control:
+        loop_var: host
