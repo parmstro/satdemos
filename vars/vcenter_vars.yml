@@ -13,24 +13,3 @@ vcenter_network: "VM Network"
 vcenter_validate_certs: true
 
 vcenter_fdi_iso_dc_path: "[{{ vcenter_datastore }}] fdi_iso/foreman-discovery-image.20231106.3.parmstrong.ca.iso"
-
-fdi_list:
-  - fqdn: "fditest1.parmstrong.ca"
-    guest_id: "rhel8_64Guest"
-    comment: "deployed from FDI iso"
-    memory_mb: 8192
-    cpu_cores_per_socket: 1
-    cpus: 1
-    hotadd_cpu: true
-    hotadd_memory: true
-    network_config_type: "dhcp"
-    network_device_type: "vmxnet3"
-    iface: "eth0"
-    vm_network_name: "VM Network"
-    disks:
-      - size_mb: 102400
-        scsi_controller: 0
-        unit_number: 1
-        type: "thin"
-        scsi_type: "paravirtual"
-        mode: "persistent"

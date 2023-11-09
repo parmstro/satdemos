@@ -1,8 +1,4 @@
 ---
-satellite_admin_username: "{{ satellite_admin_username_vault }}"
-satellite_admin_password: "{{ satellite_admin_password_vault }}"
-satellite_server_url: "{{ satellite_server_url_vault }}"
-satellite_validate_certs: true
 
 hostlist:
   - fqdn: "reg1rhel8.parmstrong.ca"

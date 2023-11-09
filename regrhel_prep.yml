@@ -11,7 +11,9 @@
   become: true
 
   vars_files:
+    - vars/satellite_vars.yml
     - vars/hostlist.yml
+    - ~/rhisbuilder_vault.yml
 
   tasks:
 
