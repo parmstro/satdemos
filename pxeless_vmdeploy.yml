@@ -10,7 +10,9 @@
   connection: local
 
   vars_files:
+    - vars/satellite_vars.yml
     - vars/vcenter_vars.yml
+    - vars/fdi_demo_vars.yml
     - ~/rhisbuilder_vault.yml
 
   tasks:
@@ -19,3 +21,6 @@
       loop: "{{ fdi_list }}"
       loop_control:
         loop_var: host
+
+#    - name: "Wait for the hosts to respond"
+#    - name: "Clean up the discovery rules"

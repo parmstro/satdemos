@@ -1,0 +1,20 @@
+---
+# This task creates a discovery rule for satellite
+# This task expects a variable drule_search to exist
+# This task expects a host dictionary to exist
+
+- name: "Ensure the discovery rule state for rule - {{ drule_name }}"
+  redhat.satellite.discovery_rule:
+    username: "{{ satellite_admin_username }}"
+    password: "{{ satellite_admin_password }}"
+    server_url: "{{ satellite_server_url }}"
+    organizations: "{{ drule_organization }}"
+    locations: "{{ drule_location }}"
+    name: "{{ drule_name }}"
+    state: "{{ drule_state }}"
+    enabled: "{{ drule_enabled }}"
+    hostgroup: "{{ drule_hostgroup }}"
+    hostname: "{{ drule_fqdn }}"
+    max_count: "{{ drule_limit | default(1) }}"
+    search: "{{ drule_search }}"
+    validate_certs: false

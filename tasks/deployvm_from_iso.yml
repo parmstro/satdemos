@@ -39,6 +39,10 @@
     validate_certs: "{{ vcenter_validate_certs }}"
   register: createvm
 
+- name: "Display the configuration created"
+  ansible.builtin.debug:
+    var: createvm
+
 - name: "Create VM disks"
   community.vmware.vmware_guest_disk:
     hostname: "{{ vcenter_hostname_fqdn }}"
@@ -58,6 +62,11 @@
   loop: "{{ host.disks }}"
   loop_control:
     loop_var: disk
+  register: add_disk
+
+- name: "Display the configuration created"
+  ansible.builtin.debug:
+    var: add_disk
 
 - name: "Power on VM"
   community.vmware.vmware_guest:
@@ -68,3 +77,23 @@
     state: poweredon
     validate_certs: "{{ vcenter_validate_certs }}"
   register: poweron
+
+- name: "Display the result"
+  ansible.builtin.debug:
+    var: poweron
+
+- name: "Create the mac variable for this host"
+  ansible.builtin.set_fact:
+    vm_mac: "{{ poweron.instance.hw_eth0.macaddress }}"
+
+- name: "Create the discovery rule for the new VM"
+  ansible.builtin.include_tasks: "create_discovery_rule.yml"
+  vars:
+    drule_search: "mac = {{ vm_mac }}"
+    drule_name: "{{ drule_name_prefix }}lab-{{ host.fqdn }}"
+    drule_state: present
+    drule_priority: 100
+    drule_organization: "{{ host.organization }}"
+    drule_location: "{{ host.location }}"
+    drule_hostgroup: "{{ host.sat_hostgroup }}"
+    drule_fqdn: "{{ host.fqdn }}"

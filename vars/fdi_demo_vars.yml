@@ -1,0 +1,53 @@
+---
+## Define the FDI demo vars
+## Need to include vcenter_vars.yml (separated as used in multiple demos)
+drule_name_prefix: "ansible_fdi_autodeploy_"
+drule_max_count: 1
+drule_enabled: true
+drule_state: present
+
+fdi_list:
+  - fqdn: "fdidemo88.parmstrong.ca"
+    sat_hostgroup: "fdi_demo_88"
+    organization: "Default Organization"
+    location: "Default Location"
+    guest_id: "rhel8_64Guest"
+    comment: "deployed from FDI iso"
+    memory_mb: 8192
+    cpu_cores_per_socket: 1
+    cpus: 1
+    hotadd_cpu: true
+    hotadd_memory: true
+    network_config_type: "dhcp"
+    network_device_type: "vmxnet3"
+    iface: "eth0"
+    vm_network_name: "VM Network"
+    disks:
+      - size_mb: 102400
+        scsi_controller: 0
+        unit_number: 1
+        type: "thin"
+        scsi_type: "paravirtual"
+        mode: "persistent"
+  - fqdn: "fdidemo92.parmstrong.ca"
+    sat_hostgroup: "fdi_demo_88"
+    organization: "Default Organization"
+    location: "Default Location"
+    guest_id: "rhel8_64Guest"
+    comment: "deployed from FDI iso"
+    memory_mb: 8192
+    cpu_cores_per_socket: 1
+    cpus: 1
+    hotadd_cpu: true
+    hotadd_memory: true
+    network_config_type: "dhcp"
+    network_device_type: "vmxnet3"
+    iface: "eth0"
+    vm_network_name: "VM Network"
+    disks:
+      - size_mb: 102400
+        scsi_controller: 0
+        unit_number: 1
+        type: "thin"
+        scsi_type: "paravirtual"
+        mode: "persistent"
